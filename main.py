@@ -204,7 +204,7 @@ def get_ai_response():
     if session['section']=='China MBBS Courses':
         
           
-        response = requests.get('https://myeducation001.s3.eu-north-1.amazonaws.com/courses/china_courses.json')
+        response = requests.get('https://myeducation001.s3.eu-north-1.amazonaws.com/courses/china_MBBS_courses.json')
         # Log the AI response
         if response.status_code == 200:
             courses_data = response.json()
@@ -254,7 +254,7 @@ if __name__ == '__main__':
     app.secret_key = os.urandom(24)  # Use a more secure method to generate a secret key
     app.config['SESSION_TYPE'] = 'filesystem'  # Choose an appropriate session type
     # app.run(debug=True,port=5000)
-    app.run(host='0.0.0.0', port=8000,debug=True)
+    app.run(host='0.0.0.0', port=3000,debug=True)
 
 
 
