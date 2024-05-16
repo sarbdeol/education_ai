@@ -127,10 +127,10 @@ def get_universities_cities():
                     "option_value": "postgradcert",
                     "text": "Postgraduate Certificate"
                 },
-                {
-                    "option_value": "premaster",
-                    "text": "Pre-Master"
-                }
+            #     {
+            #         "option_value": "premaster",
+            #         "text": "Pre-Master"
+            #     }
             ]
         
 
