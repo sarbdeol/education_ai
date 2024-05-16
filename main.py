@@ -123,10 +123,10 @@ def get_universities_cities():
                     "option_value": "postgraddip",
                     "text": "Postgraduate Diploma"
                 },
-                # {
-                #     "option_value": "postgradcert",
-                #     "text": "Postgraduate Certificate"
-                # },
+                {
+                    "option_value": "postgradcert",
+                    "text": "Postgraduate Certificate"
+                },
             #     {
             #         "option_value": "premaster",
             #         "text": "Pre-Master"
