@@ -244,8 +244,8 @@
                         </select>
                     </div>
                     <div class="form-group mr-2">
-                        <label for="city" class="mr-2">City:</label>
-                        <select class="form-control" id="city">
+                        <label for="degree_type" class="mr-2">Degree Type:</label>
+                        <select class="form-control" id="degree_type">
                             <!-- Options will be populated dynamically using JavaScript -->
                         </select>
                     </div>
@@ -261,12 +261,47 @@
         <div id="searchResultsCount" class="container"></div>
         <div id="searchResultsDiv" class="container"></div>
     </div>
+    <div class="modal fade" id="userInfoModal" tabindex="-1" role="dialog" aria-labelledby="userInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="userInfoModalLabel">Enter Your Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <form id="userInfoForm">
+                <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                <label for="message">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
     <footer class="footer py-3">
         <div class="container text-center">
             <span class="text-muted">© 2024 Education AI. All rights reserved.</span>
         </div>
     </footer>
+    <!-- Modal -->
     
+  
     <!-- Include Bootstrap JS and Popper.js (optional) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
@@ -287,14 +322,13 @@
             $('#country').change(function() {
                 var country = $(this).val();
                 $.post('/universities_cities', {country: country}, function(data) {
-                    var city = data.city;
-                    city = sortAlphabetically(city);
-                    var cityDropdown = $('#city');
-                    cityDropdown.empty(); // Clear existing options
-                    $.each(city, function(index, city) {
-                        cityDropdown.append($('<option>', {
-                            value: city,
-                            text: city
+                    var degree_types = data.degree_types;
+                    var degree_typeDropdown = $('#degree_type');
+                    degree_typeDropdown.empty(); // Clear existing options
+                    $.each(degree_types, function(index, degree) {
+                        degree_typeDropdown.append($('<option>', {
+                            value: degree.option_value,
+                            text: degree.text
                         }));
                     });
                 });
@@ -306,10 +340,10 @@
                 event.preventDefault();
                 var category = $('#category').val();
                 var country = $('#country').val();
-                var city = $('#city').val();
+                var degree_type = $('#degree_type').val();
                 showLoadingIndicator();
                 // Send form data to Flask route
-                $.post('/universities_search', { category: category, country: country, city: city }, function(data) {
+                $.post('/universities_search', { country: country, degree_type: degree_type }, function(data) {
                     var searchResultsDiv = $('#searchResults');
                     searchResultsDiv.empty(); // Clear existing results
                     console.log(data)
@@ -320,6 +354,7 @@
                         $("#searchResultsDiv").empty();
                         $("#loadingIndicator").hide();
                     }
+                    
 
                     if (data.hasOwnProperty('uni_records') && Array.isArray(data.uni_records) && data.uni_records.length > 0) {
                         // Hide loading indicator when data is ready
@@ -332,23 +367,90 @@
 
                         // Clear previous search results
                         clearPreviousResults();
+                        // Add Apply button
+                        var applyBtnHtml = '<button id="applyBtn" class="btn btn-primary mt-2">Apply</button>';
+                        $("#searchResultsDiv").append(applyBtnHtml);
 
+                        
                         // Iterate over the school records
                         data.uni_records.forEach(function(record) {
                             var schoolHtml = '<div class="school card">';
                             schoolHtml += '<div class="card-body">';
-                            schoolHtml += '<h3 class="card-title">' + record.title + '</h3>';
-                            schoolHtml += '<p class="card-text"><strong>Address:</strong> ' + record.address + '</p>';
+                            schoolHtml += '<input type="checkbox" class="uniCheckbox" data-university="' + record.university_name + '">';
+                            schoolHtml += '<h3 class="card-title">' + record.course + '</h3>';
+                            schoolHtml += '<p class="card-text"><strong>University:</strong> ' + record.university_name + '</p>';
+                            schoolHtml += '<p class="card-text"><strong>City:</strong> ' + record.city + '</p>';
                             schoolHtml += '<p class="card-text"><strong>Phone:</strong> ' + record.phone + '</p>';
-
-                            schoolHtml += '<p class="card-text"><strong>founded:</strong> ' + record.founded + '</p>';
-                            schoolHtml += '<strong>Website:</strong> <a href="' + record.website_url + '" class="card-link" target="_blank">' + record.website_url + '</a>';
-                            schoolHtml += '<p class="card-text"><strong>Description:</strong> ' + record.description + '</p>';
+                            schoolHtml += '<p class="card-text"><strong>Tution-fee:</strong> ' + record.tuition_fee + ' /Year</p>';
+                            schoolHtml += '<p class="card-text"><strong>About:</strong> ' + record.about + '</p>';
+                            schoolHtml += '<strong>Website:</strong> <a href="' + record.website + '" class="card-link" target="_blank">' + record.website + '</a>';
+                            
                             // Make website link clickable
                             
                             schoolHtml += '</div>';
                             schoolHtml += '</div>';
                             $("#searchResultsDiv").append(schoolHtml);
+                        });
+                        // var selectedUniversities = [];
+                        function handleApply() {
+                            var selectedUniversities = [];
+
+                            $(".uniCheckbox:checked").each(function() {
+                                var universityName = $(this).data('university');
+                                if (universityName !== undefined) {
+                                    selectedUniversities.push(universityName);
+                                }
+                            });
+
+                            // Log selected universities for demonstration
+                            console.log("Selected Universities:", selectedUniversities);
+
+                            // Return the selected universities
+                            return selectedUniversities;
+                        }
+
+                        // Function to handle Apply button click
+                        $("#applyBtn").click(function() {
+                            // Reset selected universities array
+                            // selectedUniversities = [];
+                            // handleApply();
+                            // Open user info modal
+                            $("#userInfoModal").modal("show");
+                        });
+                      
+                        // Function to handle form submission
+                        $("#userInfoForm").submit(function(event) {
+                            event.preventDefault(); // Prevent default form submission
+
+                            // Get form data
+                            var formData = {
+                                name: $("#name").val(),
+                                phone: $("#phone").val(),
+                                email: $("#email").val(),
+                                message: $("#message").val(),
+                                universities: handleApply()
+                            };
+
+
+                            
+
+                            // Close modal
+                            $("#userInfoModal").modal("hide");
+
+                            // Send form data to Python function to store in CSV
+                            $.ajax({
+                                type: "POST",
+                                url: "/store_data",
+                                data: formData,
+                                success: function(response) {
+                                    // Handle success
+                                    console.log("Data stored successfully:", formData);
+                                },
+                                error: function(xhr, status, error) {
+                                    // Handle error
+                                    console.error("Error storing data:", error);
+                                }
+                            });
                         });
                     } else {
                         $("#loadingIndicator").hide();
@@ -356,9 +458,14 @@
                     }
                 });
             });
+
+
+
         });
     </script>
-    
+    <script>
+        
+    </script>
     
 </body>
 </html>

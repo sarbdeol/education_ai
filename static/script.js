@@ -278,3 +278,6 @@ function loadSchoolsPage() {
 function loadUniPage() {
     window.location.href = "/universities";  // Redirect to the /schools route
 }
+
+
+
