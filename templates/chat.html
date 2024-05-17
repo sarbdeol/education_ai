@@ -22,8 +22,8 @@
             /* overflow: hidden; */
         }
       
-        .navbar-brand {
-            color: beige!important;
+        .navbar-brand, .nav-link{
+            color: rgb(255, 255, 255)!important;
             
         }
 
@@ -216,7 +216,22 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/universities">University Admission</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/China_mbbs">MBBS China</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/schools">Schools Admission</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Help</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <div>
@@ -240,7 +255,7 @@
                                 <span class="suggestion-text">University Admission</span>
                                 <div class="truncate font-normal opacity-50" id="suggestion-text">University Admission</div>
                             </button>
-                            <button class="btn btn-primary suggestion-btn" id="dynamicSuggestions" onclick="selectSuggestion('China MBBS Courses')">
+                            <button class="btn btn-primary suggestion-btn" id="dynamicSuggestions" onclick="loadmbbsPage()">
                                 <span class="suggestion-text">China MBBS Courses</span>
                                 <div class="truncate font-normal opacity-50" id="suggestion-text">China MBBS Courses</div>
                             </button>

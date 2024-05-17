@@ -280,4 +280,8 @@ function loadUniPage() {
 }
 
 
+function loadmbbsPage() {
+    window.location.href = "/China_mbbs";  // Redirect to the /schools route
+}
+
 

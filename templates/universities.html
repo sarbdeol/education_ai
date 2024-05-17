@@ -22,8 +22,8 @@
             /* overflow: hidden; */
         }
       
-        .navbar-brand {
-            color: beige!important;
+        .navbar-brand ,.nav-link{
+            color: rgb(255, 255, 255)!important;
             
         }
 
@@ -197,13 +197,65 @@
                 margin-bottom: 7rem!important; /* Adjust margin for larger screens */
             }
         }
-        .bottom-input {
-            position: fixed;
-            left: 16px;
-            bottom: 35px;
-            width: calc(100% - 30px);
-            padding: 15px 0px;
+        /* Add this CSS in your stylesheet */
+        /* Add this CSS in your stylesheet */
+        .school.card {
+            position: relative; /* Add relative positioning */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease;
+            padding: 15px; /* Add padding to make space for the checkbox */
         }
+
+        .school.card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .school.card .card-body {
+            padding: 15px;
+        }
+
+        .school.card .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .school.card .card-text {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+
+        .school.card .card-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .school.card .card-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Increase the size of the checkbox */
+        .uniCheckbox {
+            width: 20px;
+            height: 20px;
+            transform: scale(1.5);
+            -webkit-transform: scale(1.5); /* For Safari */
+            -moz-transform: scale(1.5); /* For Firefox */
+            -ms-transform: scale(1.5); /* For Internet Explorer */
+            -o-transform: scale(1.5); /* For Opera */
+            position: absolute; /* Position the checkbox absolutely */
+            top: 15px; /* Position it at the top right corner */
+            right: 15px; /* Adjust the right margin */
+            margin: 0;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+
 
     </style>
 </head>
@@ -216,7 +268,22 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/universities">University Admission</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/China_mbbs">MBBS China</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/schools">Schools Admission</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Help</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <div>
@@ -374,23 +441,24 @@
                         
                         // Iterate over the school records
                         data.uni_records.forEach(function(record) {
-                            var schoolHtml = '<div class="school card">';
+                            var schoolHtml = '<div class="school card mb-3">';
                             schoolHtml += '<div class="card-body">';
-                            schoolHtml += '<input type="checkbox" class="uniCheckbox" data-university="' + record.university_name + '">';
+                            schoolHtml += '<input type="checkbox" class="uniCheckbox" data-university="' + record.university_name + '">'; // Add checkbox here
                             schoolHtml += '<h3 class="card-title">' + record.course + '</h3>';
                             schoolHtml += '<p class="card-text"><strong>University:</strong> ' + record.university_name + '</p>';
                             schoolHtml += '<p class="card-text"><strong>City:</strong> ' + record.city + '</p>';
                             schoolHtml += '<p class="card-text"><strong>Phone:</strong> ' + record.phone + '</p>';
-                            schoolHtml += '<p class="card-text"><strong>Tution-fee:</strong> ' + record.tuition_fee + ' /Year</p>';
-                            // schoolHtml += '<p class="card-text"><strong>About:</strong> ' + record.about + '</p>';
+                            schoolHtml += '<p class="card-text"><strong>Tuition-fee:</strong> ' + record.tuition_fee + ' /Year</p>';
                             schoolHtml += '<strong>Website:</strong> <a href="' + record.website + '" class="card-link" target="_blank">' + record.website + '</a>';
-                            
-                            // Make website link clickable
-                            
-                            schoolHtml += '</div>';
-                            schoolHtml += '</div>';
+                            schoolHtml += '</div>'; // Close card-body
+                            schoolHtml += '</div>'; // Close card
                             $("#searchResultsDiv").append(schoolHtml);
                         });
+
+
+
+
+
                         // var selectedUniversities = [];
                         function handleApply() {
                             var selectedUniversities = [];

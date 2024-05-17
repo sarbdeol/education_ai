@@ -30,6 +30,39 @@ def schools():
 def univerities():
     return render_template('universities.html')
 
+@app.route('/China_mbbs')
+def China_mbbs():
+    response = requests.get('https://myeducation001.s3.eu-north-1.amazonaws.com/courses/china_MBBS_courses.json')
+    # Log the AI response
+    if response.status_code == 200:
+        courses_data = response.json()
+
+
+        return render_template('mbbs_china.html', courses=courses_data)
+@app.route('/apply/<string:course_id>')
+def apply(course_id):
+    print(course_id)
+    response = requests.get('https://myeducation001.s3.eu-north-1.amazonaws.com/courses/china_MBBS_courses.json')
+    course = None
+    if response.status_code == 200:
+        courses_data = response.json()
+        for course_data in courses_data:
+            print(course_data.get('university'))
+            if course_id == course_data.get('university'):
+                course = course_data
+                break
+    return render_template('mbbs_apply.html', course=course)
+
+@app.route('/submit-application', methods=['POST'])
+def submit_application():
+    name = request.form['name']
+    email = request.form['email']
+    phone = request.form['phone']
+    address = request.form['address']
+    message = request.form['message']
+    # Process the form data here (e.g., save to database, send email)
+    return redirect(url_for('China_mbbs'))
+
 def format_text(text):
     # Bold text within double asterisks
     text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
@@ -226,16 +259,7 @@ def uni_search():
             
             school_records.append(record)
 
-    # print(school_records)
-
-    
-    # for record in data:
-    #     # print(city,record.get('address').split('\n')[1])
-    #     if city.strip() in record.get('address').split('\n')[1]:
-            
-    #         school_records.append(record)
-    # # school_records = [record for record in data if city.strip().lower() in record.get('address').split('\n')[1].lower()]
-    # print(school_records)
+ 
     return jsonify({'uni_records': school_records})
    
 # Define a function to process user queries
