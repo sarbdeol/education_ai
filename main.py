@@ -15,7 +15,61 @@ today_date = datetime.today().strftime('%Y-%m-%d')
 app = Flask(__name__)
 
 
+import smtplib
+from email.mime.text import MIMEText
+from selenium.webdriver.support import expected_conditions as EC
+from email.mime.multipart import MIMEMultipart
 
+def mailsent(message_body):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587  # 587 is the default for TLS, use 465 for SSL
+    smtp_username = 'sarbtech123@@gmail.com'
+    smtp_password = 'fpaibhjdkuifdifs'
+    sender_email = 'sarbtech123@gmail.com'
+    # recipient_email = ['sarbtech123@gmail.com','dev@snaprecruit.com','vik@snaprecruit.com']
+    recipient_email = ['sarbjitdeol142@gmail.com']
+    
+    subject = f'message : MBBS Form Submission'
+
+    
+    # Create a MIMEText object for the message body
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To']  = ', '.join(recipient_email)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(str(message_body), 'plain'))
+    # Connect to the SMTP server
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()  # Use TLS (for SSL, use server.connect(smtp_server, 465))
+        server.login(smtp_username, smtp_password)
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+
+    print('Email sent successfully')
+def mailsent2(message_body):
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587  # 587 is the default for TLS, use 465 for SSL
+    smtp_username = 'sarbtech123@@gmail.com'
+    smtp_password = 'fpaibhjdkuifdifs'
+    sender_email = 'sarbtech123@gmail.com'
+    # recipient_email = ['sarbtech123@gmail.com','dev@snaprecruit.com','vik@snaprecruit.com']
+    recipient_email = ['sarbjitdeol142@gmail.com']
+    
+    subject = f'message : Universities Form Submission'
+
+    
+    # Create a MIMEText object for the message body
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To']  = ', '.join(recipient_email)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(str(message_body), 'plain'))
+    # Connect to the SMTP server
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()  # Use TLS (for SSL, use server.connect(smtp_server, 465))
+        server.login(smtp_username, smtp_password)
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+
+    print('Email sent successfully')
 # Define a function to process user queries
 
 
@@ -60,7 +114,18 @@ def submit_application():
     phone = request.form['phone']
     address = request.form['address']
     message = request.form['message']
+    page_url = request.referrer
+    message_body = f"""
+    Name: {name}
+    Email: {email}
+    Phone: {phone}
+    Address: {address}
+    Message: {message}
+    
+    Submitted from: {page_url}
+    """
     # Process the form data here (e.g., save to database, send email)
+    mailsent(message_body)
     return redirect(url_for('China_mbbs'))
 
 def format_text(text):
@@ -333,14 +398,19 @@ def store_data():
     email = request.form.get("email")
     message = request.form.get("message")
     universities = request.form.getlist("universities[]")  # Get universities as a comma-separated string
-    print(universities)
+    # print(universities)
+    body = f"""
+    Name: {name}
+    Email: {email}
+    Phone: {phone}
+    universities: {universities}
+    Message: {message}
+    """
+    mailsent2(body)
     # universities = universities_string.split(',') if universities_string else []  # Convert string to list
     # print(universities)
     # Store data in CSV file
-    with open("data.csv", "a", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([name, phone, email, message] +  ", ".join(universities))
-
+    
     return "Data stored successfully"
 
 @app.route('/get_ai_response', methods=['POST'])
